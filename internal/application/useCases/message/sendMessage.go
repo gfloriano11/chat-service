@@ -15,9 +15,9 @@ type SendMessageInput struct {
 	UserId int
 }
 
-func (useCase SendMessageUseCase) Execute(input SendMessageInput) error {
-	userId := input.UserId
-	content := input.Content
+func (useCase SendMessageUseCase) Execute(sendMessageInput SendMessageInput) error {
+	userId := sendMessageInput.UserId
+	content := sendMessageInput.Content
 	id := 1
 	createdAt := time.Now()
 
@@ -26,8 +26,8 @@ func (useCase SendMessageUseCase) Execute(input SendMessageInput) error {
 	}
 
 	message := &domain.Message{
-			ID: id,
-			UserID: userId,
+			Id: id,
+			UserId: userId,
 			Content: content,
 			CreatedAt: createdAt,
 	}
