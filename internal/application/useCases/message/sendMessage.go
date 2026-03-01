@@ -1,9 +1,11 @@
 package message
 
 import (
-	"chat-service/internal/domain"
 	"errors"
 	"time"
+
+	inputs "chat-service/internal/application/Inputs"
+	domain "chat-service/internal/domain"
 )
 
 type SendMessageUseCase struct {
@@ -15,13 +17,19 @@ type SendMessageInput struct {
 	UserId int
 }
 
-func (useCase SendMessageUseCase) Execute(sendMessageInput SendMessageInput) error {
+func NewSendMessageUseCase(repository domain.MessageRepository) SendMessageUseCase {
+	return SendMessageUseCase{
+		Repository: repository,
+	}
+}
+
+func (useCase SendMessageUseCase) Execute(sendMessageInput inputs.NewMessageInput) error {
 	userId := sendMessageInput.UserId
 	content := sendMessageInput.Content
-	id := 1
+	id := 1 // ID FIXO DE MSG
 	createdAt := time.Now()
 
-	if (userId == 0 || content == "") {
+	if userId == 0 || content == "" {
 		return errors.New("It was impossible to send your message")
 	}
 
