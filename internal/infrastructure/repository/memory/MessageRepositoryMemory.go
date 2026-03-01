@@ -30,7 +30,7 @@ func (repository *MessageRepositoryMemory) Save(message *domain.Message) error {
 	return nil
 }
 
-func (repository *MessageRepositoryMemory) FindAll() ([]domain.Message, error) {
+func (repository *MessageRepositoryMemory) FindAllMessages() ([]domain.Message, error) {
 	repository.mutex.Lock()
 	defer repository.mutex.Unlock()
 
