@@ -5,10 +5,12 @@ import (
 	"net/http"
 
 	messageHttp "chat-service/internal/infrastructure/http"
+	"chat-service/internal/module"
 )
 
 func main() {
-	router := messageHttp.NewRouter()
+	messageModule := module.NewMessageModule()
+	router := messageHttp.NewRouter(messageModule)
 	log.Println("server running at http://localhost:8080");
 	http.ListenAndServe(":8080", router)
 }
