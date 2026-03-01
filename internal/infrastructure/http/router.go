@@ -4,13 +4,15 @@ import (
 	"net/http"
 
 	handlers "chat-service/internal/infrastructure/http/handlers"
+	"chat-service/internal/module"
 )
 
-func NewRouter() *http.ServeMux {
+func NewRouter(messageModule module.MessageModule) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	// mux.Handle("/health", handlers.HealthHandler{})
 
-	mux.Handle("/messages", handlers.MessageHandler{})
+	messageHandler := handlers.NewMessageHandler(messageModule.SendMessage, messageModule.FindAllMessages)
+	mux.Handle("/messages", messageHandler)
 	return mux
 }
