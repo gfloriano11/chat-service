@@ -12,7 +12,7 @@ func NewRouter(messageModule module.MessageModule) *http.ServeMux {
 
 	// mux.Handle("/health", handlers.HealthHandler{})
 
-	messageHandler := handlers.NewMessageHandler(messageModule.SendMessage, messageModule.FindAllMessages)
+	messageHandler := handlers.NewMessageHandler(messageModule.SendMessage, messageModule.FindMessagesByChatId)
 	mux.Handle("/messages", messageHandler)
 	return mux
 }

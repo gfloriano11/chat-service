@@ -7,16 +7,16 @@ import (
 
 type MessageModule struct {
 	SendMessage application.SendMessageUseCase
-	FindAllMessages application.GetMessageUseCase
+	FindMessagesByChatId application.FindMessagesByChatId
 }
 
 func NewMessageModule() MessageModule {
 	repository := memoryRepository.NewMessageRepositoryMemory()
-	getMessageUseCase := application.NewGetMessageUseCase(repository)
+	findMessagesByChatId := application.NewFindMessagesByChatId(repository)
 	sendMessageUseCase := application.NewSendMessageUseCase(repository)
 
 	return MessageModule{
 		sendMessageUseCase,
-		getMessageUseCase,
+		findMessagesByChatId,
 	}
 }

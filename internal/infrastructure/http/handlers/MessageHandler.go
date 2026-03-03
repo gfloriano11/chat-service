@@ -12,10 +12,10 @@ import (
 
 type MessageHandler struct {
 	sendMessageUseCase application.SendMessageUseCase
-	findAllMessagesUseCase application.GetMessageUseCase
+	findAllMessagesUseCase application.FindMessagesByChatId
 }
 
-func NewMessageHandler(sendMessage application.SendMessageUseCase, findAllMessages application.GetMessageUseCase) MessageHandler {
+func NewMessageHandler(sendMessage application.SendMessageUseCase, findAllMessages application.FindMessagesByChatId) MessageHandler {
 	return MessageHandler{
 		sendMessageUseCase: sendMessage,
 		findAllMessagesUseCase: findAllMessages,
