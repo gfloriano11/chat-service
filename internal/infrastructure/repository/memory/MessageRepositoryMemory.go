@@ -30,7 +30,7 @@ func (repository *MessageRepositoryMemory) Save(message *domain.Message) error {
 	return nil
 }
 
-func (repository *MessageRepositoryMemory) FindMessagesByChatId() ([]domain.Message, error) {
+func (repository *MessageRepositoryMemory) FindMessagesByChatId(chatId int) ([]domain.Message, error) {
 	repository.mutex.Lock()
 	defer repository.mutex.Unlock()
 

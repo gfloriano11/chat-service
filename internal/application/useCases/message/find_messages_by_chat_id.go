@@ -12,8 +12,12 @@ func NewFindMessagesByChatId(repository domain.MessageRepository) FindMessagesBy
 	}
 }
 
-func (useCase FindMessagesByChatId) Execute(chatId int) error {
-	
+func (useCase FindMessagesByChatId) Execute(chatId int) ([]domain.Message, error) {
+	messages, err := useCase.Repository.FindMessagesByChatId(chatId)
 
-	return nil
+	if err != nil {
+		return messages, err
+	}
+
+	return messages, nil
 }

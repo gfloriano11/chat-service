@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	// "strconv"
 	"strings"
 
 	application "chat-service/internal/application/useCases/message"
@@ -12,13 +13,13 @@ import (
 
 type MessageHandler struct {
 	sendMessageUseCase application.SendMessageUseCase
-	findAllMessagesUseCase application.FindMessagesByChatId
+	findMessagesByChatId application.FindMessagesByChatId
 }
 
 func NewMessageHandler(sendMessage application.SendMessageUseCase, findAllMessages application.FindMessagesByChatId) MessageHandler {
 	return MessageHandler{
 		sendMessageUseCase: sendMessage,
-		findAllMessagesUseCase: findAllMessages,
+		findMessagesByChatId: findAllMessages,
 	}
 }
 
@@ -31,7 +32,23 @@ func (handler MessageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 
 	if method == http.MethodGet && url == "" {
 		log.Println("Trying to find chat messages")
+		// chatId, err := strconv.Atoi(strings.Split(url, "/")[1])
+
+		// if err != nil {
+		// 	http.Error(w, "invalid chat id", http.StatusBadRequest)
+		// 	return
+		// }
+
+		messages, err := handler.findMessagesByChatId.Execute(1)
+
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(messages)
 	}
 
 	if method == http.MethodPost && url == "" {

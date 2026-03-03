@@ -2,5 +2,5 @@ package domain
 
 type MessageRepository interface {
     Save(message *Message) error
-    FindMessagesByChatId() ([]Message, error)
+    FindMessagesByChatId(chatId int) ([]Message, error)
 }
