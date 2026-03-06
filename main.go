@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	messageHttp "chat-service/internal/infrastructure/http"
+	messageHttp "chat-service/internal/infrastructure/http/router"
 	"chat-service/internal/module"
 )
 
