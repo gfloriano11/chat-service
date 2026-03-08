@@ -2,7 +2,9 @@ package module
 
 import (
 	application "chat-service/internal/application/useCases/message"
-	memoryRepository "chat-service/internal/infrastructure/repository/memory"
+	messageRepository "chat-service/internal/infrastructure/repository"
+
+	"gorm.io/gorm"
 )
 
 type MessageModule struct {
@@ -10,8 +12,8 @@ type MessageModule struct {
 	FindMessagesByChatId application.FindMessagesByChatId
 }
 
-func NewMessageModule() MessageModule {
-	repository := memoryRepository.NewMessageRepositoryMemory()
+func NewMessageModule(db *gorm.DB) MessageModule {
+	repository := messageRepository.NewMessageRepository(db)
 	findMessagesByChatId := application.NewFindMessagesByChatId(repository)
 	sendMessageUseCase := application.NewSendMessageUseCase(repository)
 
