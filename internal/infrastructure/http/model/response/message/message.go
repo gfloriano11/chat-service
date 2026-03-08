@@ -1,4 +1,4 @@
-package messages
+package message
 
 import (
 	"chat-service/internal/domain"
@@ -6,23 +6,28 @@ import (
 )
 
 type MessageResponse struct {
-	Id int
-	Content string
+	Id        int
+	Content   string
 	CreatedBy int
-	SentAt time.Time
+	SentAt    time.Time
+}
+
+func NewMessageResponse(message domain.Message) MessageResponse {
+	messageResponse := MessageResponse{
+		message.Id,
+		message.Content,
+		message.UserId,
+		message.CreatedAt,
+	}
+
+	return messageResponse
 }
 
 func NewMessagesResponse(messages []domain.Message) []MessageResponse {
 	messagesResponse := []MessageResponse{}
 
 	for _, message := range messages {
-		messageResponse := MessageResponse{
-			message.Id,
-			message.Content,
-			message.UserId,
-			message.CreatedAt,
-		}
-
+		messageResponse := NewMessageResponse(message)
 		messagesResponse = append(messagesResponse, messageResponse)
 	}
 
