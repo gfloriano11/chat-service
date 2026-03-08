@@ -23,14 +23,14 @@ func NewSendMessageUseCase(repository domain.MessageRepository) SendMessageUseCa
 	}
 }
 
-func (useCase SendMessageUseCase) Execute(sendMessageInput inputs.NewMessageInput) error {
+func (useCase SendMessageUseCase) Execute(sendMessageInput inputs.NewMessageInput) (domain.Message, error) {
 	userId := sendMessageInput.UserId
 	content := sendMessageInput.Content
 	id := 1 // ID FIXO DE MSG
 	createdAt := time.Now()
 
 	if userId == 0 || content == "" {
-		return errors.New("It was impossible to send your message")
+		return domain.Message{}, errors.New("It was impossible to send your message")
 	}
 
 	message := &domain.Message{
@@ -42,8 +42,8 @@ func (useCase SendMessageUseCase) Execute(sendMessageInput inputs.NewMessageInpu
 
 	err := useCase.Repository.Save(message)
 	if err != nil {
-		return err
+		return domain.Message{}, err
 	}
 
-	return nil
+	return *message, nil
 }
