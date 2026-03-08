@@ -5,11 +5,11 @@ import (
 	"time"
 
 	inputs "chat-service/internal/application/Inputs"
-	domain "chat-service/internal/domain"
+	message "chat-service/internal/domain/message"
 )
 
 type SendMessageUseCase struct {
-	Repository domain.MessageRepository
+	Repository message.MessageRepository
 }
 
 type SendMessageInput struct {
@@ -17,28 +17,28 @@ type SendMessageInput struct {
 	UserId int
 }
 
-func NewSendMessageUseCase(repository domain.MessageRepository) SendMessageUseCase {
+func NewSendMessageUseCase(repository message.MessageRepository) SendMessageUseCase {
 	return SendMessageUseCase{
 		Repository: repository,
 	}
 }
 
-func (useCase SendMessageUseCase) Execute(sendMessageInput inputs.NewMessageInput) (domain.Message, error) {
+func (useCase SendMessageUseCase) Execute(sendMessageInput inputs.NewMessageInput) (message.Message, error) {
 	if sendMessageInput.UserId == 0 || sendMessageInput.Content == "" {
-		return domain.Message{}, errors.New("It was impossible to send your message")
+		return message.Message{}, errors.New("It was impossible to send your message")
 	}
 
-	message := &domain.Message{
+	newMessage := &message.Message{
 		CreatedBy: sendMessageInput.UserId,
 		CreatedAt: time.Now().UTC(),
 		Content: sendMessageInput.Content,
 		ChatId: 1,
 	}
 
-	err := useCase.Repository.Save(message)
+	err := useCase.Repository.Save(newMessage)
 	if err != nil {
-		return domain.Message{}, err
+		return message.Message{}, err
 	}
 
-	return *message, nil
+	return *newMessage, nil
 }

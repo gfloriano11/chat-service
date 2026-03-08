@@ -1,7 +1,7 @@
 package message
 
 import (
-	"chat-service/internal/domain"
+	"chat-service/internal/domain/message"
 	"time"
 )
 
@@ -12,7 +12,7 @@ type MessageResponse struct {
 	SentAt    time.Time
 }
 
-func NewMessageResponse(message domain.Message) MessageResponse {
+func NewMessageResponse(message message.Message) MessageResponse {
 	messageResponse := MessageResponse{
 		message.Id,
 		message.Content,
@@ -23,7 +23,7 @@ func NewMessageResponse(message domain.Message) MessageResponse {
 	return messageResponse
 }
 
-func NewMessagesResponse(messages []domain.Message) []MessageResponse {
+func NewMessagesResponse(messages []message.Message) []MessageResponse {
 	messagesResponse := []MessageResponse{}
 
 	for _, message := range messages {
