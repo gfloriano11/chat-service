@@ -7,11 +7,12 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func NewRouter(messageModule module.MessageModule) http.Handler {
+func NewRouter(modules *module.Modules) http.Handler {
 
 	router := chi.NewRouter()
 
-	router.Mount("/messages", NewMessageRouter(messageModule))
+	router.Mount("/messages", NewMessageRouter(modules.MessageModule))
+	router.Mount("/chats", NewChatRouter(modules.ChatModule))
 
 	return router
 }
