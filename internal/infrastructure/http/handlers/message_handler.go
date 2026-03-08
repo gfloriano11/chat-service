@@ -2,7 +2,9 @@ package handlers
 
 import (
 	application "chat-service/internal/application/useCases/message"
+	"chat-service/internal/infrastructure/http/model/request"
 	response "chat-service/internal/infrastructure/http/model/response/messages"
+	"encoding/json"
 	"net/http"
 	"strconv"
 )
@@ -19,7 +21,7 @@ func NewMessageHandler(sendMessage application.SendMessageUseCase, findAllMessag
 	}
 }
 
-func (handler MessageHandler) GetMessages(w http.ResponseWriter, r *http.Request) ([]response.MessageResponse, error){
+func (handler MessageHandler) GetMessages(w http.ResponseWriter, r *http.Request) ([]response.MessageResponse, error) {
 	
 	chatId, err := strconv.Atoi(r.URL.Query().Get("chatId"))
 
@@ -34,4 +36,26 @@ func (handler MessageHandler) GetMessages(w http.ResponseWriter, r *http.Request
 	}
 
 	return response.NewMessagesResponse(messages), nil
+}
+
+func (handler MessageHandler) SendMessage(w http.ResponseWriter, r *http.Request) {
+	var newMessageRequest request.NewMessageRequest
+
+	defer r.Body.Close()
+
+	err := json.NewDecoder(r.Body).Decode(&newMessageRequest)
+	if err != nil {
+		http.Error(w, "invalid body", http.StatusBadRequest)
+		return
+	}
+
+	err = handler.sendMessageUseCase.Execute(newMessageRequest.ToNewMessageInput())
+	if err != nil {
+		http.Error(w, "error creating message", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+
+	json.NewEncoder(w).Encode(response.MessageResponse{})
 }
