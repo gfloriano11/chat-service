@@ -7,4 +7,5 @@ type Message struct {
 	UserId    int
 	Content   string
 	CreatedAt time.Time
+	ChatId    int
 }
