@@ -2,7 +2,7 @@ package module
 
 import (
 	application "chat-service/internal/application/useCases/message"
-	messageRepository "chat-service/internal/infrastructure/repository"
+	messageRepository "chat-service/internal/infrastructure/database/repository"
 
 	"gorm.io/gorm"
 )

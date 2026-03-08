@@ -2,7 +2,7 @@ package repository
 
 import (
 	"chat-service/internal/domain"
-	"chat-service/internal/infrastructure/entity"
+	"chat-service/internal/infrastructure/database/entity"
 
 	"gorm.io/gorm"
 )

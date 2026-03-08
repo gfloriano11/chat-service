@@ -1,7 +1,7 @@
 package database
 
 import (
-	"chat-service/internal/infrastructure/entity"
+	entity "chat-service/internal/infrastructure/database/entity"
 	"fmt"
 	"os"
 
