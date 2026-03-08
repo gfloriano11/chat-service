@@ -13,13 +13,13 @@ import (
 
 type MessageHandler struct {
 	sendMessageUseCase application.SendMessageUseCase
-	findMessagesByChatId application.FindMessagesByChatId
+	findMessagesByChatIdUseCase application.FindMessagesByChatId
 }
 
 func NewMessageHandler(sendMessage application.SendMessageUseCase, findAllMessages application.FindMessagesByChatId) MessageHandler {
 	return MessageHandler{
 		sendMessageUseCase: sendMessage,
-		findMessagesByChatId: findAllMessages,
+		findMessagesByChatIdUseCase: findAllMessages,
 	}
 }
 
@@ -31,7 +31,7 @@ func (handler MessageHandler) GetMessages(w http.ResponseWriter, r *http.Request
 		http.Error(w, "invalid body", http.StatusInternalServerError)
 	}
 
-	messages, err := handler.findMessagesByChatId.Execute(chatId)
+	messages, err := handler.findMessagesByChatIdUseCase.Execute(chatId)
 
 	if err != nil {
 		http.Error(w, "invalid body", http.StatusInternalServerError)

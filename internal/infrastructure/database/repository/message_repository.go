@@ -33,8 +33,8 @@ func (repository MessageRepository) Save(message *message.Message) error {
 		return err
 	}
 
+	
 	message.Id = int(entity.Id)
-
 	return nil
 }
 

@@ -20,8 +20,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	messageModule := module.NewMessageModule(db)
-	router := messageHttp.NewRouter(messageModule)
+	modules := module.CreateModules(db)
+	router := messageHttp.NewRouter(modules)
 	log.Println("server running at http://localhost:8080");
 	http.ListenAndServe(":8080", router)
 }
