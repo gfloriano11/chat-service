@@ -16,7 +16,7 @@ func NewMessageRouter(messageModule module.MessageModule) http.Handler {
 		messageModule.FindMessagesByChatId,
 	)
 
-	r.Get("/", messageHandler.GetMessages)
+	r.Get("/{chatId}", messageHandler.GetMessages)
 
 	r.Post("/", messageHandler.SendMessage)
 

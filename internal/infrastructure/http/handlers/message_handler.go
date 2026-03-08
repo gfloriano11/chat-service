@@ -3,10 +3,12 @@ package handlers
 import (
 	application "chat-service/internal/application/useCases/message"
 	"chat-service/internal/infrastructure/http/model/request"
-	response "chat-service/internal/infrastructure/http/model/response/messages"
+	response "chat-service/internal/infrastructure/http/model/response/message"
 	"encoding/json"
 	"net/http"
 	"strconv"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type MessageHandler struct {
@@ -21,21 +23,22 @@ func NewMessageHandler(sendMessage application.SendMessageUseCase, findAllMessag
 	}
 }
 
-func (handler MessageHandler) GetMessages(w http.ResponseWriter, r *http.Request) ([]response.MessageResponse, error) {
+func (handler MessageHandler) GetMessages(w http.ResponseWriter, r *http.Request) {
 	
-	chatId, err := strconv.Atoi(r.URL.Query().Get("chatId"))
+	chatId, err := strconv.Atoi(chi.URLParam(r, "chatId"))
 
 	if err != nil {
-		return []response.MessageResponse{}, err
+		http.Error(w, "invalid body", http.StatusInternalServerError)
 	}
 
 	messages, err := handler.findMessagesByChatId.Execute(chatId)
 
 	if err != nil {
-		return []response.MessageResponse{}, err
+		http.Error(w, "invalid body", http.StatusInternalServerError)
 	}
 
-	return response.NewMessagesResponse(messages), nil
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response.NewMessagesResponse(messages))
 }
 
 func (handler MessageHandler) SendMessage(w http.ResponseWriter, r *http.Request) {
@@ -49,13 +52,13 @@ func (handler MessageHandler) SendMessage(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	err = handler.sendMessageUseCase.Execute(newMessageRequest.ToNewMessageInput())
+	message, err := handler.sendMessageUseCase.Execute(newMessageRequest.ToNewMessageInput())
+	
 	if err != nil {
 		http.Error(w, "error creating message", http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-
-	json.NewEncoder(w).Encode(response.MessageResponse{})
+	json.NewEncoder(w).Encode(response.NewMessageResponse(message))
 }
