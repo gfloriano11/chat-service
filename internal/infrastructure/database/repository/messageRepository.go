@@ -3,6 +3,7 @@ package repository
 import (
 	"chat-service/internal/domain"
 	"chat-service/internal/infrastructure/database/entity"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -17,18 +18,16 @@ func NewMessageRepository(db *gorm.DB) *MessageRepository {
 	}
 }
 
-    // Save(message *Message) error
-    // FindMessagesByChatId(chatId int) ([]Message, error)
-
 func (repository MessageRepository) Save(message *domain.Message) error {
 
 	entity := entity.Message{
 		Content: message.Content,
-		UserId: message.Id,
+		CreatedBy: message.CreatedBy,
 		ChatId: message.ChatId,
+		CreatedAt: time.Now(),
 	}
 
-	err := repository.db.Create(entity).Error
+	err := repository.db.Create(&entity).Error
 
 	if err != nil {
 		return err
@@ -54,8 +53,10 @@ func (repository MessageRepository) FindMessagesByChatId(id int) ([]domain.Messa
 		messages = append(messages, domain.Message{
 			Id:      entity.Id,
 			Content: entity.Content,
-			UserId:  entity.UserId,
+			CreatedBy:  entity.CreatedBy,
 			ChatId:  entity.ChatId,
+			CreatedAt: entity.CreatedAt,
+			UpdatedAt: entity.UpdatedAt,
 		})
 	}
 

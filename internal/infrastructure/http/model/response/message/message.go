@@ -16,7 +16,7 @@ func NewMessageResponse(message domain.Message) MessageResponse {
 	messageResponse := MessageResponse{
 		message.Id,
 		message.Content,
-		message.UserId,
+		message.CreatedBy,
 		message.CreatedAt,
 	}
 

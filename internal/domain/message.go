@@ -4,8 +4,12 @@ import "time"
 
 type Message struct {
 	Id        int
-	UserId    int
 	Content   string
-	CreatedAt time.Time
 	ChatId    int
+	CreatedAt time.Time
+	CreatedBy int
+	UpdatedAt time.Time
+	updatedBy int
+	DeletedAt time.Time
+	DeletedBy int
 }
