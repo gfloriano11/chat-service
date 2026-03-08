@@ -24,7 +24,7 @@ func Connect() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	db.AutoMigrate(entity.Message{})
+	db.AutoMigrate(entity.Message{}, entity.Chat{})
 
 	return db, nil
 }
