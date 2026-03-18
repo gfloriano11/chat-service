@@ -3,16 +3,15 @@ package user
 import (
 	inputs "chat-service/internal/application/Inputs"
 	"chat-service/internal/domain/user"
-	"chat-service/internal/infrastructure/database/repository"
 	"errors"
 )
 
 type CreateUserUseCase struct {
-	Repository repository.UserRepository
+	Repository user.UserRepository
 }
 
-func NewCreateUserUseCase(repository repository.UserRepository) *CreateUserUseCase {
-	return &CreateUserUseCase{
+func NewCreateUserUseCase(repository user.UserRepository) CreateUserUseCase {
+	return CreateUserUseCase{
 		Repository: repository,
 	}
 }
@@ -29,7 +28,7 @@ func (useCase CreateUserUseCase) CreateUser(createUserInput inputs.CreateUserInp
 		Fullname: createUserInput.Fullname,
 	}
 
-	useCase.Repository.Save(*user)
+	useCase.Repository.Save(user)
 
 	return *user, nil
 }

@@ -18,7 +18,7 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	}
 }
 
-func (repository UserRepository) Save(User user.User) (user.User, error) {
+func (repository UserRepository) Save(User *user.User) (user.User, error) {
 
 	entity := entity.User{
 		Email: User.Email,
@@ -39,5 +39,5 @@ func (repository UserRepository) Save(User user.User) (user.User, error) {
 	User.Id = entity.Id
 	User.UpdatedBy = entity.UpdatedBy
 
-	return User, nil
+	return *User, nil
 }
