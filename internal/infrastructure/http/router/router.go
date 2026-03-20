@@ -13,6 +13,7 @@ func NewRouter(modules *module.Modules) http.Handler {
 
 	router.Mount("/messages", NewMessageRouter(modules.MessageModule))
 	router.Mount("/chats", NewChatRouter(modules.ChatModule))
+	router.Mount("/users", NewUserRouter(modules.UserModule))
 
 	return router
 }
