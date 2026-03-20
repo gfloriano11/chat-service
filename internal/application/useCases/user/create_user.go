@@ -16,7 +16,7 @@ func NewCreateUserUseCase(repository user.UserRepository) CreateUserUseCase {
 	}
 }
 
-func (useCase CreateUserUseCase) CreateUser(createUserInput inputs.CreateUserInput) (user.User, error) {
+func (useCase CreateUserUseCase) Execute(createUserInput inputs.CreateUserInput) (user.User, error) {
 
 	if createUserInput.Email == "" || createUserInput.Fullname == "" || createUserInput.Username == "" || createUserInput.Password == "" {
 		return user.User{}, errors.New("Any of the fields can be empty")

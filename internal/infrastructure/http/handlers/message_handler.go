@@ -34,7 +34,7 @@ func (handler MessageHandler) GetMessages(w http.ResponseWriter, r *http.Request
 	messages, err := handler.findMessagesByChatIdUseCase.Execute(chatId)
 
 	if err != nil {
-		http.Error(w, "invalid body", http.StatusInternalServerError)
+		http.Error(w, "Error trying to get messages", http.StatusInternalServerError)
 	}
 
 	w.WriteHeader(http.StatusOK)
