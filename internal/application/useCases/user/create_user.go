@@ -2,6 +2,7 @@ package user
 
 import (
 	inputs "chat-service/internal/application/Inputs"
+	services "chat-service/internal/infrastructure/security"
 	"chat-service/internal/domain/user"
 	"errors"
 )
@@ -22,10 +23,18 @@ func (useCase CreateUserUseCase) Execute(createUserInput inputs.CreateUserInput)
 		return user.User{}, errors.New("Any of the fields can be empty")
 	}
 
+	passwordService := services.NewPasswordService()
+	hashedPassword, err := passwordService.Hash(createUserInput.Password)
+
+	if err != nil {
+		return user.User{}, errors.New("Error while trying to validate your password.")
+	}
+
 	user := &user.User{
 		Email: createUserInput.Email,
 		Username: createUserInput.Username,
 		Fullname: createUserInput.Fullname,
+		Password: hashedPassword,
 	}
 
 	useCase.Repository.Save(user)

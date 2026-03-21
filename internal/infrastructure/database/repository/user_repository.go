@@ -23,8 +23,11 @@ func (repository UserRepository) Save(User *user.User) (user.User, error) {
 	entity := entity.User{
 		Email: User.Email,
 		Username: User.Username,
+		Fullname: User.Fullname,
+		Password: User.Password,
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
+		UpdatedBy: nil,
 		IsDeleted: false,
 		DeletedAt: nil,
 		DeletedBy: nil,
