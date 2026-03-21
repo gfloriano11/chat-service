@@ -13,9 +13,11 @@ func NewUserRouter(userModule module.UserModule) http.Handler {
 
 	userHandler := handlers.NewUserHandler(
 		userModule.CreateUser,
+		userModule.FindUserByEmail,
 	)
 	
-	r.Post("/", userHandler.CreateUser)
+	r.Post("/register", userHandler.CreateUser)
+	r.Post("/login", userHandler.Login)
 
 	return r
 }
