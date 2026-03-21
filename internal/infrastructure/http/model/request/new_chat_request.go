@@ -7,7 +7,7 @@ import (
 type NewChatRequest struct {
 	Title        string `json:"title"`
 	CreatedBy    int    `json:"userId"`
-	SecondUserId int    `json:"secondUserid"` 
+	SecondUserId int    `json:"secondUserId"` 
 }
 
 func (newChatRequest NewChatRequest) ToNewChatInput() inputs.NewChatInput {

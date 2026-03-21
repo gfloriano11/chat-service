@@ -24,7 +24,7 @@ func NewSendMessageUseCase(repository message.MessageRepository) SendMessageUseC
 }
 
 func (useCase SendMessageUseCase) Execute(sendMessageInput inputs.NewMessageInput) (message.Message, error) {
-	if sendMessageInput.UserId == 0 || sendMessageInput.Content == "" {
+	if sendMessageInput.Content == "" {
 		return message.Message{}, errors.New("It was impossible to send your message")
 	}
 
@@ -32,7 +32,7 @@ func (useCase SendMessageUseCase) Execute(sendMessageInput inputs.NewMessageInpu
 		CreatedBy: sendMessageInput.UserId,
 		CreatedAt: time.Now().UTC(),
 		Content: sendMessageInput.Content,
-		ChatId: 1,
+		ChatId: sendMessageInput.ChatId,
 	}
 
 	err := useCase.Repository.Save(newMessage)

@@ -9,9 +9,10 @@ type NewMessageRequest struct {
 	UserId  int    `json:"userId"`
 }
 
-func (newMessageRequest NewMessageRequest) ToNewMessageInput() inputs.NewMessageInput {
+func (newMessageRequest NewMessageRequest) ToNewMessageInput(chatId int) inputs.NewMessageInput {
 	return inputs.NewMessageInput{
 		Content: newMessageRequest.Content,
 		UserId: newMessageRequest.UserId,
+		ChatId: chatId,
 	}
 }

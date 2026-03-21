@@ -42,17 +42,24 @@ func (handler MessageHandler) GetMessages(w http.ResponseWriter, r *http.Request
 }
 
 func (handler MessageHandler) SendMessage(w http.ResponseWriter, r *http.Request) {
+
+	chatId, err := strconv.Atoi(chi.URLParam(r, "chatId"))
+
+	if err != nil {
+		http.Error(w, "Chat Id must be a valid id", http.StatusInternalServerError)
+	}
+
 	var newMessageRequest request.NewMessageRequest
 
 	defer r.Body.Close()
 
-	err := json.NewDecoder(r.Body).Decode(&newMessageRequest)
+	err = json.NewDecoder(r.Body).Decode(&newMessageRequest)
 	if err != nil {
 		http.Error(w, "invalid body", http.StatusBadRequest)
 		return
 	}
 
-	message, err := handler.sendMessageUseCase.Execute(newMessageRequest.ToNewMessageInput())
+	message, err := handler.sendMessageUseCase.Execute(newMessageRequest.ToNewMessageInput(chatId))
 	
 	if err != nil {
 		http.Error(w, "error creating message", http.StatusInternalServerError)
