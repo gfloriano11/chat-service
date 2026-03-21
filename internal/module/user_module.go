@@ -8,14 +8,17 @@ import (
 )
 
 type UserModule struct {
-	CreateUser application.CreateUserUseCase
+	CreateUser				application.CreateUserUseCase
+	FindUserByEmail 	application.FindUserByEmail
 }
 
 func NewUserModule(db *gorm.DB) UserModule {
 	repository := userRepository.NewUserRepository(db)
 	createUserUseCase := application.NewCreateUserUseCase(repository)
+	findUserByEmailUseCase := application.NewFindUserByEmail(repository)
 
 	return UserModule{
 		CreateUser: createUserUseCase,
+		FindUserByEmail: findUserByEmailUseCase,
 	}
 }
