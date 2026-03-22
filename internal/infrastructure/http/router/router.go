@@ -16,7 +16,7 @@ func NewRouter(modules *module.Modules, jwtService auth.JwtService) http.Handler
 
 	router.Route("/messages", func(r chi.Router) {
 		r.Use(jwtService.AuthMiddleware())
-		r.Mount("/",  NewMessageRouter(modules.MessageModule))
+		r.Mount("/", NewMessageRouter(modules.MessageModule))
 	})
 
 	router.Route("/chats", func(r chi.Router) {
