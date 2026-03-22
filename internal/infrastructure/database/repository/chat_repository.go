@@ -39,3 +39,10 @@ func (repository ChatRepository) Save(chat *chat.Chat) error {
 
 	return nil
 }
+
+func (repository ChatRepository) IsUserParticipant(id, userId int) bool {
+	var entity entity.Chat
+	var count int64
+	repository.db.Where("id = ? AND (created_by = ? OR second_user_id = ?)", id, userId, userId).Find(&entity).Count(&count)
+	return count > 0
+}

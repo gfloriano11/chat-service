@@ -62,7 +62,14 @@ func (handler MessageHandler) SendMessage(w http.ResponseWriter, r *http.Request
 	message, err := handler.sendMessageUseCase.Execute(newMessageRequest.ToNewMessageInput(chatId))
 	
 	if err != nil {
-		http.Error(w, "error creating message", http.StatusInternalServerError)
+		switch err {
+
+		case application.ErrUserNotInChat:
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+
+		default:
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+		}
 		return
 	}
 
