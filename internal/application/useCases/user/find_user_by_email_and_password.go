@@ -5,7 +5,6 @@ import (
 	"chat-service/internal/domain/user"
 	"chat-service/internal/infrastructure/security"
 	"errors"
-	"log"
 )
 
 type FindUserByEmail struct {
@@ -38,10 +37,7 @@ func (useCase FindUserByEmail) Execute(input inputs.NewLoginInput) (user.User, e
 	}
 	
 	passwordService := security.NewPasswordService()
-	log.Println("user pass: ", input.Password, "foundUserPass: ", foundUser.Password)
 	isPasswordValid := passwordService.Check(input.Password, foundUser.Password)
-
-	log.Println("is valid pass? ", isPasswordValid)
 
 	if !isPasswordValid {
 		return user.User{}, errors.New("E-mail or password is wrong.")
