@@ -9,8 +9,8 @@ import (
 )
 
 type UserHandler struct {
-	CreateUserUseCase 			application.CreateUserUseCase
-	LoginUseCase 	application.Login
+	CreateUserUseCase		application.CreateUserUseCase
+	LoginUseCase 				application.Login
 }
 
 func NewUserHandler(createUser application.CreateUserUseCase, login application.Login) UserHandler {
@@ -32,7 +32,7 @@ func (handler UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := handler.CreateUserUseCase.Execute(newUserRequest.ToCreateUserInput())
+	createdUser, err := handler.CreateUserUseCase.Execute(newUserRequest.ToCreateUserInput())
 
 	if err != nil {
 		http.Error(w, "Error while trying to create user!", http.StatusInternalServerError)
@@ -40,7 +40,7 @@ func (handler UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(response.NewUserResponse(user))
+	json.NewEncoder(w).Encode(response.NewUserTokenResponse(createdUser.User, createdUser.Token))
 }
 
 func (handler UserHandler) Login(w http.ResponseWriter, r *http.Request) {
