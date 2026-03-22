@@ -35,21 +35,19 @@ func (handler UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	output, err := handler.CreateUserUseCase.Execute(newUserRequest.ToCreateUserInput())
 
 	if err != nil {
-	switch err {
+		switch err {
 
-	case application.ErrEmptyFields,
-		 application.ErrInvalidEmail:
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		case application.ErrEmptyFields, application.ErrInvalidEmail:
+			http.Error(w, err.Error(), http.StatusBadRequest)
 
-	case application.ErrEmailAlreadyExists:
-		http.Error(w, err.Error(), http.StatusConflict)
+		case application.ErrEmailAlreadyExists:
+			http.Error(w, err.Error(), http.StatusConflict)
 
-	default:
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		default:
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+		}
+		return
 	}
-
-	return
-}
 
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(response.NewUserTokenResponse(output.User, output.Token))
