@@ -2,7 +2,7 @@ package module
 
 import (
 	application "chat-service/internal/application/useCases/message"
-	messageRepository "chat-service/internal/infrastructure/database/repository"
+	repository "chat-service/internal/infrastructure/database/repository"
 
 	"gorm.io/gorm"
 )
@@ -13,9 +13,10 @@ type MessageModule struct {
 }
 
 func NewMessageModule(db *gorm.DB) MessageModule {
-	repository := messageRepository.NewMessageRepository(db)
-	findMessagesByChatId := application.NewFindMessagesByChatId(repository)
-	sendMessageUseCase := application.NewSendMessageUseCase(repository)
+	messageRepository := repository.NewMessageRepository(db)
+	chatRepository := repository.NewChatRepository(db)
+	findMessagesByChatId := application.NewFindMessagesByChatId(messageRepository)
+	sendMessageUseCase := application.NewSendMessageUseCase(messageRepository, chatRepository)
 
 	return MessageModule{
 		sendMessageUseCase,

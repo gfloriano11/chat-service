@@ -6,13 +6,12 @@ import (
 
 type NewMessageRequest struct {
 	Content string `json:"content"`
-	UserId  int    `json:"userId"`
 }
 
-func (newMessageRequest NewMessageRequest) ToNewMessageInput(chatId int) inputs.NewMessageInput {
+func (newMessageRequest NewMessageRequest) ToNewMessageInput(chatId, userId int) inputs.NewMessageInput {
 	return inputs.NewMessageInput{
 		Content: newMessageRequest.Content,
-		UserId: newMessageRequest.UserId,
+		UserId: userId,
 		ChatId: chatId,
 	}
 }

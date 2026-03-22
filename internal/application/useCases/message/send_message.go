@@ -19,9 +19,10 @@ type SendMessageInput struct {
 	UserId int
 }
 
-func NewSendMessageUseCase(repository message.MessageRepository) SendMessageUseCase {
+func NewSendMessageUseCase(repository message.MessageRepository, chatRepository chat.ChatRepository) SendMessageUseCase {
 	return SendMessageUseCase{
 		MessageRepository: repository,
+		ChatRepository: chatRepository,
 	}
 }
 
