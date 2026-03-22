@@ -4,6 +4,7 @@ import (
 	application "chat-service/internal/application/useCases/message"
 	"chat-service/internal/infrastructure/http/model/request"
 	response "chat-service/internal/infrastructure/http/model/response/message"
+	"chat-service/internal/infrastructure/security/auth"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -44,6 +45,7 @@ func (handler MessageHandler) GetMessages(w http.ResponseWriter, r *http.Request
 func (handler MessageHandler) SendMessage(w http.ResponseWriter, r *http.Request) {
 
 	chatId, err := strconv.Atoi(chi.URLParam(r, "chatId"))
+	userId, _ := auth.GetUserIdFromContext(r.Context())
 
 	if err != nil {
 		http.Error(w, "Chat Id must be a valid id", http.StatusInternalServerError)
@@ -59,7 +61,7 @@ func (handler MessageHandler) SendMessage(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	message, err := handler.sendMessageUseCase.Execute(newMessageRequest.ToNewMessageInput(chatId))
+	message, err := handler.sendMessageUseCase.Execute(newMessageRequest.ToNewMessageInput(chatId, userId))
 	
 	if err != nil {
 		switch err {
