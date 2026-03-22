@@ -81,9 +81,14 @@ func (service JwtService) AuthMiddleware() func(http.Handler) http.Handler {
 
 			userId := int(claims["userId"].(float64))
 
-			userContexxt := context.WithValue(r.Context(), "userId", userId)
+			userContext := context.WithValue(r.Context(), "userId", userId)
 
-			next.ServeHTTP(w, r.WithContext(userContexxt))
+			next.ServeHTTP(w, r.WithContext(userContext))
 		})
 	}
+}
+
+func GetUserIdFromContext(securityContext context.Context) (int, bool) {
+	userId, ok := securityContext.Value("userId").(int)
+	return userId, ok
 }
