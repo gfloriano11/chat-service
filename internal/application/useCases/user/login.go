@@ -38,19 +38,19 @@ func (useCase Login) Execute(input inputs.NewLoginInput) (string, error) {
 	isEmailValid := useCase.EmailService.IsValid(input.Email)
 
 	if !isEmailValid {
-		return "", errors.New("Invalid e-mail.")
+		return GenericError()
 	}
 
 	foundUser, err := useCase.Repository.FindUserByEmail(input.Email)
 	
 	if err != nil {
-		return "", errors.New("invalid credentials")
+		return GenericError()
 	}
 	
 	isPasswordValid := useCase.PasswordService.Check(input.Password, foundUser.Password)
 
 	if !isPasswordValid {
-		return "", errors.New("E-mail or password is wrong.")
+		return GenericError()
 	}
 
 	token, err := useCase.JwtService.Generate(foundUser.Id)
@@ -60,4 +60,8 @@ func (useCase Login) Execute(input inputs.NewLoginInput) (string, error) {
 	}
 
 	return token, nil
+}
+
+func GenericError() (string, error) {
+	return "", errors.New("E-mail or password is wrong.")
 }
