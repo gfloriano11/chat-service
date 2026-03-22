@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -10,7 +11,8 @@ type JwtService struct {
 	Secret string
 }
 
-func NewJwtService(secret string) JwtService {
+func NewJwtService() JwtService {
+	secret := os.Getenv("SECRET")
 	return JwtService{
 		Secret: secret,
 	}
