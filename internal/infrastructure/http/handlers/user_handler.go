@@ -2,21 +2,21 @@ package handlers
 
 import (
 	application "chat-service/internal/application/useCases/user"
-	response "chat-service/internal/infrastructure/http/model/response/user"
 	"chat-service/internal/infrastructure/http/model/request"
+	response "chat-service/internal/infrastructure/http/model/response/user"
 	"encoding/json"
 	"net/http"
 )
 
 type UserHandler struct {
-	CreateUserUseCase 								application.CreateUserUseCase
-	FindUserByEmailUseCase application.FindUserByEmail
+	CreateUserUseCase 			application.CreateUserUseCase
+	LoginUseCase 	application.Login
 }
 
-func NewUserHandler(createUser application.CreateUserUseCase, findUserByEmail application.FindUserByEmail) UserHandler {
+func NewUserHandler(createUser application.CreateUserUseCase, login application.Login) UserHandler {
 	return UserHandler{
 		CreateUserUseCase: createUser,
-		FindUserByEmailUseCase: findUserByEmail,
+		LoginUseCase: login,
 	}
 }
 
@@ -55,7 +55,7 @@ func (handler UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := handler.FindUserByEmailUseCase.Execute(newLoginRequest.ToLoginInput())
+	token, err := handler.LoginUseCase.Execute(newLoginRequest.ToLoginInput())
 
 	if err != nil {
 		http.Error(w, "Invalid email or password.", http.StatusInternalServerError)
@@ -63,5 +63,5 @@ func (handler UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response.NewUserResponse(user))
+	json.NewEncoder(w).Encode(token)
 }
