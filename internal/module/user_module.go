@@ -16,7 +16,14 @@ type UserModule struct {
 
 func NewUserModule(db *gorm.DB) UserModule {
 	repository := userRepository.NewUserRepository(db)
-	createUserUseCase := application.NewCreateUserUseCase(repository)
+	
+	createUserUseCase := application.NewCreateUserUseCase(
+		repository,
+		auth.NewJwtService(), 
+		security.NewEmailService(), 
+		security.NewPasswordService(),
+	)
+
 	loginUsecase := application.NewLoginUseCase(
 		repository, 
 		auth.NewJwtService(), 
