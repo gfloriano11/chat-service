@@ -1,7 +1,6 @@
 package user
 
 import (
-	inputs "chat-service/internal/application/Inputs"
 	"chat-service/internal/domain/user"
 	"chat-service/internal/infrastructure/security"
 	"errors"
@@ -17,31 +16,25 @@ func NewFindUserByEmail(repository user.UserRepository) FindUserByEmail {
 	}
 }
 
-func (useCase FindUserByEmail) Execute(input inputs.NewLoginInput) (user.User, error) {
+func (useCase FindUserByEmail) Execute(email string) (user.User, error) {
 
-	if input.Email == "" || input.Password == "" {
-		return user.User{}, errors.New("E-mail or password can't be empty!")
+	if email == "" {
+		return user.User{}, errors.New("E-mail can't be empty!")
 	}
 
 	emailService := security.NewEmailService()
-	isEmailValid := emailService.IsValid(input.Email)
+	isEmailValid := emailService.IsValid(email)
 
 	if !isEmailValid {
 		return user.User{}, errors.New("Invalid e-mail.")
 	}
 	
-	foundUser, err := useCase.Repository.FindUserByEmail(input.Email)
+	foundUser, err := useCase.Repository.FindUserByEmail(email)
 	
 	if err != nil {
 		return user.User{}, errors.New("It was an error while serch for users")
 	}
-	
-	passwordService := security.NewPasswordService()
-	isPasswordValid := passwordService.Check(input.Password, foundUser.Password)
-
-	if !isPasswordValid {
-		return user.User{}, errors.New("E-mail or password is wrong.")
-	}
 
 	return foundUser, nil
 }
+
