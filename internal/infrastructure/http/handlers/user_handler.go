@@ -32,15 +32,27 @@ func (handler UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	createdUser, err := handler.CreateUserUseCase.Execute(newUserRequest.ToCreateUserInput())
+	output, err := handler.CreateUserUseCase.Execute(newUserRequest.ToCreateUserInput())
 
 	if err != nil {
-		http.Error(w, "Error while trying to create user!", http.StatusInternalServerError)
-		return
+	switch err {
+
+	case application.ErrEmptyFields,
+		 application.ErrInvalidEmail:
+		http.Error(w, err.Error(), http.StatusBadRequest)
+
+	case application.ErrEmailAlreadyExists:
+		http.Error(w, err.Error(), http.StatusConflict)
+
+	default:
+		http.Error(w, "internal server error", http.StatusInternalServerError)
 	}
 
+	return
+}
+
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(response.NewUserTokenResponse(createdUser.User, createdUser.Token))
+	json.NewEncoder(w).Encode(response.NewUserTokenResponse(output.User, output.Token))
 }
 
 func (handler UserHandler) Login(w http.ResponseWriter, r *http.Request) {

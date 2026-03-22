@@ -5,7 +5,6 @@ import (
 	"chat-service/internal/domain/user"
 	"chat-service/internal/infrastructure/security"
 	"chat-service/internal/infrastructure/security/auth"
-	"errors"
 )
 
 type CreateUserUseCase struct {
@@ -37,38 +36,42 @@ func NewCreateUserUseCase(
 func (useCase CreateUserUseCase) Execute(createUserInput inputs.CreateUserInput) (CreateUserOutput, error) {
 
 	if createUserInput.Email == "" || createUserInput.Fullname == "" || createUserInput.Username == "" || createUserInput.Password == "" {
-		return CreateUserOutput{}, errors.New("Any of the fields can be empty")
+		return CreateUserOutput{}, ErrEmptyFields
 	}
 
 	isEmailValid := useCase.EmailService.IsValid(createUserInput.Email)
 	
 	if !isEmailValid {
-		return CreateUserOutput{}, errors.New("Invalid e-mail")
+		return CreateUserOutput{}, ErrInvalidEmail
 	}
 
 	hashedPassword, err := useCase.PasswordService.Hash(createUserInput.Password)
 
 	if err != nil {
-		return CreateUserOutput{}, errors.New("Error while trying to validate your password.")
+		return CreateUserOutput{}, ErrGeneric
 	}
 
-	createdUser := &user.User{
+	userToCreate := &user.User{
 		Email: createUserInput.Email,
 		Username: createUserInput.Username,
 		Fullname: createUserInput.Fullname,
 		Password: hashedPassword,
 	}
 
-	useCase.Repository.Save(createdUser)
+	createdUser, err := useCase.Repository.Save(userToCreate)
+
+	if err != nil {
+
+	}
 
 	token, err := useCase.JwtService.Generate(createdUser.Id)
 
 	if err != nil {
-		return CreateUserOutput{}, errors.New("We can't create your account. Please, try again.")
+		return CreateUserOutput{}, ErrGeneric
 	}
 
 	output := CreateUserOutput{
-		User: *createdUser,
+		User: createdUser,
 		Token: token,
 	}
 
