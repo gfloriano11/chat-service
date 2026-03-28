@@ -40,7 +40,9 @@ func (repository UserRepository) Save(User *user.User) (user.User, error) {
 	}
 
 	User.Id = entity.Id
-	User.UpdatedBy = entity.UpdatedBy
+	User.CreatedAt = entity.CreatedAt
+	User.UpdatedBy = &entity.Id
+	User.UpdatedAt = entity.UpdatedAt
 
 	return *User, nil
 }
