@@ -35,6 +35,6 @@ func (useCase FindUserByEmail) Execute(email string) (user.User, error) {
 		return user.User{}, errors.New("It was an error while serch for users")
 	}
 
-	return foundUser, nil
+	return *foundUser, nil
 }
 

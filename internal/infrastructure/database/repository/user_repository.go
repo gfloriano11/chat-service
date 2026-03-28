@@ -47,12 +47,12 @@ func (repository UserRepository) Save(User *user.User) (user.User, error) {
 	return *User, nil
 }
 
-func (repository UserRepository) FindUserByEmail(email string) (user.User, error) {
+func (repository UserRepository) FindUserByEmail(email string) (*user.User, error) {
 	var entity entity.User
 	err := repository.db.Where("email = ?", email).Find(&entity).Error
 
 	if err != nil {
-		return user.User{}, err
+		return &user.User{}, err
 	}
 
 	user := user.User{
@@ -64,5 +64,5 @@ func (repository UserRepository) FindUserByEmail(email string) (user.User, error
 		CreatedAt: entity.CreatedAt,
 	}
 
-	return user, nil
+	return &user, nil
 }

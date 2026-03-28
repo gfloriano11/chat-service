@@ -58,10 +58,20 @@ func (useCase CreateUserUseCase) Execute(createUserInput inputs.CreateUserInput)
 		Password: hashedPassword,
 	}
 
+	existingUser, err := useCase.Repository.FindUserByEmail(userToCreate.Email)
+
+	if err != nil {
+		return CreateUserOutput{}, ErrGeneric
+	}
+
+	if existingUser != nil {
+		return CreateUserOutput{}, ErrEmailAlreadyExists
+	}
+
 	createdUser, err := useCase.Repository.Save(userToCreate)
 
 	if err != nil {
-
+		return CreateUserOutput{}, ErrGeneric
 	}
 
 	token, err := useCase.JwtService.Generate(createdUser.Id)
