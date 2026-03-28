@@ -5,7 +5,6 @@ import (
 	"chat-service/internal/domain/user"
 	"chat-service/internal/infrastructure/security"
 	"chat-service/internal/infrastructure/security/auth"
-	"log"
 )
 
 type CreateUserUseCase struct {
@@ -53,11 +52,9 @@ func (useCase CreateUserUseCase) Execute(createUserInput inputs.CreateUserInput)
 	}
 	
 	if existingUser != nil {
-		log.Println("0")
 		return CreateUserOutput{}, ErrEmailAlreadyExists
 	}
 
-	log.Println("1")
 	hashedPassword, err := useCase.PasswordService.Hash(createUserInput.Password)
 
 	if err != nil {
