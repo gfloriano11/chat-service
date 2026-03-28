@@ -2,6 +2,7 @@ package router
 
 import (
 	"chat-service/internal/infrastructure/security/auth"
+	"chat-service/internal/infrastructure/websocket"
 	"chat-service/internal/module"
 	"net/http"
 
@@ -22,6 +23,11 @@ func NewRouter(modules *module.Modules, jwtService auth.JwtService) http.Handler
 	router.Route("/chats", func(r chi.Router) {
 		r.Use(jwtService.AuthMiddleware())
 		r.Mount("/", NewChatRouter(modules.ChatModule))
+	})
+
+	router.Route("/ws", func(r chi.Router) {
+		r.Use(jwtService.AuthMiddleware())
+		r.Mount("/", websocket.WebsocketHandler())
 	})
 
 	return router
