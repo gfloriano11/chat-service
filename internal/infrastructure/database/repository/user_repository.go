@@ -3,6 +3,7 @@ package repository
 import (
 	"chat-service/internal/domain/user"
 	"chat-service/internal/infrastructure/database/entity"
+	"errors"
 	"time"
 
 	"gorm.io/gorm"
@@ -49,10 +50,13 @@ func (repository UserRepository) Save(User *user.User) (user.User, error) {
 
 func (repository UserRepository) FindUserByEmail(email string) (*user.User, error) {
 	var entity entity.User
-	err := repository.db.Where("email = ?", email).Find(&entity).Error
+	err := repository.db.Where("email = ?", email).First(&entity).Error
 
 	if err != nil {
-		return &user.User{}, err
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
 	}
 
 	user := user.User{
