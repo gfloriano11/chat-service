@@ -49,6 +49,7 @@ func (handler UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	http.SetCookie(w, handler.CreateUserUseCase.JwtService.NewAuthCookie(output.Token))
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(response.NewUserTokenResponse(output.User, output.Token))
@@ -73,6 +74,7 @@ func (handler UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	http.SetCookie(w, handler.LoginUseCase.JwtService.NewAuthCookie(token))
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(token)

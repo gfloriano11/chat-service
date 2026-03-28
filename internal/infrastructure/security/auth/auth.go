@@ -88,6 +88,26 @@ func (service JwtService) AuthMiddleware() func(http.Handler) http.Handler {
 	}
 }
 
+func (service JwtService) NewAuthCookie(token string) *http.Cookie {
+	env := os.Getenv("APP_ENV")
+	isProd := env == "production"
+
+	sameSite := http.SameSiteLaxMode
+	if isProd {
+		sameSite = http.SameSiteNoneMode
+	}
+
+	return &http.Cookie{
+		Name:     "access_token",
+		Value:    token,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   isProd,
+		SameSite: sameSite,
+		MaxAge:   3600,
+	}
+}
+
 func GetUserIdFromContext(securityContext context.Context) (int, bool) {
 	userId, ok := securityContext.Value("userId").(int)
 	return userId, ok
