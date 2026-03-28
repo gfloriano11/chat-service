@@ -21,7 +21,7 @@ func NewRouter(modules *module.Modules, jwtService auth.JwtService) http.Handler
 		AllowCredentials: true,
 	}))
 
-	router.Mount("/users", NewUserRouter(modules.UserModule))
+	router.Mount("/users", NewUserRouter(modules.UserModule, jwtService))
 
 	router.Route("/messages", func(r chi.Router) {
 		r.Use(jwtService.AuthMiddleware())

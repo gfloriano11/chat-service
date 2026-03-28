@@ -49,22 +49,26 @@ func (service JwtService) Validate(token string) (*jwt.Token, error) {
 func (service JwtService) AuthMiddleware() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
+			var tokenToString string
 			authHeader := r.Header.Get("Authorization")
 
 			if authHeader == "" {
-				http.Error(w, "unauthorized", http.StatusUnauthorized)
-				return
+				cookie, err := r.Cookie("access_token")
+				if err != nil {
+					http.Error(w, "unauthorized", http.StatusUnauthorized)
+					return
+				}
+				tokenToString = cookie.Value
+			} else {
+				splittedAuthHeader := strings.Split(authHeader, " ")
+	
+				if len(splittedAuthHeader) != 2 || splittedAuthHeader[0] != "Bearer" {
+					http.Error(w, "unauthorized", http.StatusUnauthorized)
+					return
+				}
+	
+				tokenToString = splittedAuthHeader[1]
 			}
-
-			splittedAuthHeader := strings.Split(authHeader, " ")
-
-			if len(splittedAuthHeader) != 2 || splittedAuthHeader[0] != "Bearer" {
-				http.Error(w, "unauthorized", http.StatusUnauthorized)
-				return
-			}
-
-			tokenToString := splittedAuthHeader[1]
 
 			token, err := service.Validate(tokenToString)
 			if err != nil || !token.Valid {

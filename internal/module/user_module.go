@@ -12,6 +12,7 @@ import (
 type UserModule struct {
 	CreateUser	application.CreateUserUseCase
 	Login 			application.Login
+	GetMe 			application.GetMe
 }
 
 func NewUserModule(db *gorm.DB) UserModule {
@@ -31,8 +32,11 @@ func NewUserModule(db *gorm.DB) UserModule {
 		security.NewPasswordService(),
 	)
 
+	getMeUseCase := application.NewGetMeUseCase(repository)
+
 	return UserModule{
 		CreateUser: createUserUseCase,
 		Login: loginUsecase,
+		GetMe: getMeUseCase,
 	}
 }

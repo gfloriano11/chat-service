@@ -70,3 +70,26 @@ func (repository UserRepository) FindUserByEmail(email string) (*user.User, erro
 
 	return &user, nil
 }
+
+func (repository UserRepository) FindUserById(id int) (*user.User, error) {
+	var entity entity.User
+	err := repository.db.Where("id = ?", id).First(&entity).Error
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	user := user.User{
+		Id: entity.Id,
+		Fullname: entity.Fullname,
+		Email: entity.Email,
+		Username: entity.Username,
+		Password: entity.Password,
+		CreatedAt: entity.CreatedAt,
+	}
+
+	return &user, nil
+}
