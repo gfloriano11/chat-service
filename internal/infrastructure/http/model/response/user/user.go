@@ -44,7 +44,7 @@ func NewUserTokenResponse(user user.User, token string) UserTokenResponse {
 }
 
 func NewUsersResponse(users []user.User) []UserResponse {
-	var usersResponse []UserResponse
+	usersResponse := []UserResponse{}
 	for _, user := range users {
 		usersResponse = append(usersResponse, NewUserResponse(user))	
 	}
