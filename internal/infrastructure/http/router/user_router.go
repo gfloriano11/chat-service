@@ -17,12 +17,14 @@ func NewUserRouter(userModule module.UserModule, jwtService auth.JwtService) htt
 		userModule.Login,
 		userModule.GetMe,
 		userModule.FindUsersNotInChatWithMe,
+		userModule.FindUserById,
 	)
 	
 	r.Post("/register", userHandler.CreateUser)
 	r.Post("/login", userHandler.Login)
 	r.With(jwtService.AuthMiddleware()).Get("/me", userHandler.GetMe)
 	r.With(jwtService.AuthMiddleware()).Get("/discover", userHandler.FindUsersNotInChatWithMe)
+	r.With(jwtService.AuthMiddleware()).Get("/{id}", userHandler.FindUserById)
 
 	return r
 }

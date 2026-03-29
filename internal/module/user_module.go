@@ -14,6 +14,7 @@ type UserModule struct {
 	Login 										application.Login
 	GetMe 										application.GetMe
 	FindUsersNotInChatWithMe 	application.FindUsersNotInChatWithMe
+	FindUserById							application.FindUserById
 }
 
 func NewUserModule(db *gorm.DB) UserModule {
@@ -37,10 +38,13 @@ func NewUserModule(db *gorm.DB) UserModule {
 
 	findUsersNotInChatWithMeUseCase := application.NewFindUsersNotInChatWithMeUseCase(repository)
 
+	findUserByIdUseCase := application.NewFindUserByIdUseCase(repository)
+
 	return UserModule{
 		CreateUser: createUserUseCase,
 		Login: loginUsecase,
 		GetMe: getMeUseCase,
 		FindUsersNotInChatWithMe: findUsersNotInChatWithMeUseCase,
+		FindUserById: findUserByIdUseCase,
 	}
 }

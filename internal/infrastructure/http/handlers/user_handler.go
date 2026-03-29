@@ -7,6 +7,9 @@ import (
 	"chat-service/internal/infrastructure/security/auth"
 	"encoding/json"
 	"net/http"
+	"strconv"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type UserHandler struct {
@@ -14,6 +17,7 @@ type UserHandler struct {
 	LoginUseCase 										application.Login
 	GetMeUseCase 										application.GetMe
 	FindUsersNotInChatWithMeUseCase application.FindUsersNotInChatWithMe
+	FindUserByIdUseCase 						application.FindUserById
 }
 
 func NewUserHandler(
@@ -21,12 +25,14 @@ func NewUserHandler(
 	login 										application.Login,
 	getMe 										application.GetMe,
 	findUsersNotInChatWithMe 	application.FindUsersNotInChatWithMe,
+	findUserById							application.FindUserById,
 ) UserHandler {
 	return UserHandler{
 		CreateUserUseCase: createUser,
 		LoginUseCase: login,
 		GetMeUseCase: getMe,
 		FindUsersNotInChatWithMeUseCase: findUsersNotInChatWithMe,
+		FindUserByIdUseCase: findUserById,
 	}
 }
 
@@ -129,4 +135,24 @@ func (handler UserHandler) FindUsersNotInChatWithMe(w http.ResponseWriter, r *ht
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response.NewUsersResponse(*users))
+}
+
+func (handler UserHandler) FindUserById(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+
+	if err != nil {
+		http.Error(w, "Something went wrong", http.StatusInternalServerError)
+		return
+	}
+
+	user, err := handler.FindUserByIdUseCase.Execute(id)
+
+	if err != nil {
+		http.Error(w, "Users not found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response.NewUserResponse(*user))
 }
