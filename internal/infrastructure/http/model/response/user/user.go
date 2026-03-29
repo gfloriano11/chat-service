@@ -6,20 +6,20 @@ import (
 )
 
 type UserResponse struct {
-	Id        int
-	Username  string
-	Fullname  string
-	Email     string
-	CreatedAt time.Time
+	Id        int       `json:"id"`
+	Username  string    `json:"username"`
+	Fullname  string    `json:"name"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 type UserTokenResponse struct {
-	Id        int
-	Username  string
-	Fullname  string
-	Email     string
-	CreatedAt time.Time
-	Token 		string
+	Id        int       `json:"id"`
+	Username  string    `json:"username"`
+	Fullname  string    `json:"fullname"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"createdAt"`
+	Token 		string		`json:"token"`
 }
 
 func NewUserResponse(user user.User) UserResponse {
@@ -41,4 +41,13 @@ func NewUserTokenResponse(user user.User, token string) UserTokenResponse {
 		user.CreatedAt,
 		token,
 	}
+}
+
+func NewUsersResponse(users []user.User) []UserResponse {
+	var usersResponse []UserResponse
+	for _, user := range users {
+		usersResponse = append(usersResponse, NewUserResponse(user))	
+	}
+
+	return usersResponse
 }

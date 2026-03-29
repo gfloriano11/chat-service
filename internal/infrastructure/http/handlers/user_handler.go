@@ -10,20 +10,23 @@ import (
 )
 
 type UserHandler struct {
-	CreateUserUseCase		application.CreateUserUseCase
-	LoginUseCase 				application.Login
-	GetMeUseCase 				application.GetMe
+	CreateUserUseCase								application.CreateUserUseCase
+	LoginUseCase 										application.Login
+	GetMeUseCase 										application.GetMe
+	FindUsersNotInChatWithMeUseCase application.FindUsersNotInChatWithMe
 }
 
 func NewUserHandler(
-	createUser application.CreateUserUseCase, 
-	login application.Login,
-	getMe application.GetMe,
+	createUser 								application.CreateUserUseCase, 
+	login 										application.Login,
+	getMe 										application.GetMe,
+	findUsersNotInChatWithMe 	application.FindUsersNotInChatWithMe,
 ) UserHandler {
 	return UserHandler{
 		CreateUserUseCase: createUser,
 		LoginUseCase: login,
 		GetMeUseCase: getMe,
+		FindUsersNotInChatWithMeUseCase: findUsersNotInChatWithMe,
 	}
 }
 
@@ -106,4 +109,24 @@ func (handler UserHandler) GetMe(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response.NewUserResponse(*user))
+}
+
+func (handler UserHandler) FindUsersNotInChatWithMe(w http.ResponseWriter, r *http.Request) {
+	id, ok := auth.GetUserIdFromContext(r.Context())
+
+	if !ok {
+		http.Error(w, "User not found", http.StatusForbidden)
+		return
+	}
+
+	users, err := handler.FindUsersNotInChatWithMeUseCase.Execute(id)
+
+	if err != nil {
+		http.Error(w, "Users not found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response.NewUsersResponse(*users))
 }

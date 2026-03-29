@@ -10,9 +10,10 @@ import (
 )
 
 type UserModule struct {
-	CreateUser	application.CreateUserUseCase
-	Login 			application.Login
-	GetMe 			application.GetMe
+	CreateUser								application.CreateUserUseCase
+	Login 										application.Login
+	GetMe 										application.GetMe
+	FindUsersNotInChatWithMe 	application.FindUsersNotInChatWithMe
 }
 
 func NewUserModule(db *gorm.DB) UserModule {
@@ -34,9 +35,12 @@ func NewUserModule(db *gorm.DB) UserModule {
 
 	getMeUseCase := application.NewGetMeUseCase(repository)
 
+	findUsersNotInChatWithMeUseCase := application.NewFindUsersNotInChatWithMeUseCase(repository)
+
 	return UserModule{
 		CreateUser: createUserUseCase,
 		Login: loginUsecase,
 		GetMe: getMeUseCase,
+		FindUsersNotInChatWithMe: findUsersNotInChatWithMeUseCase,
 	}
 }

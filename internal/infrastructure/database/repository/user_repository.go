@@ -93,3 +93,23 @@ func (repository UserRepository) FindUserById(id int) (*user.User, error) {
 
 	return &user, nil
 }
+
+func (repository UserRepository) 	FindUsersNotInChatsWithMeByUserId(id int) (*[]user.User, error) {
+	var users []user.User
+
+	err := repository.db.Table("users u").
+		Joins(
+			`LEFT JOIN chats c 
+				ON (u.id = c.created_by AND c.second_user_id = ?) 
+				OR (u.id = c.second_user_id AND c.created_by = ?)
+			`, id, id).
+		Where("u.id != ? AND c.id IS NULL", id).
+		Find(&users).
+		Error
+
+	if err != nil {
+			return nil, err
+	}
+
+	return &users, nil
+}
