@@ -12,6 +12,14 @@ type MessageResponse struct {
 	SentAt    time.Time `json:"sentAt"`
 }
 
+type FullMessageResponse struct {
+	Id        int       `json:"id"`
+	Content   string    `json:"content"`
+	CreatedBy int       `json:"createdBy"`
+	SentAt    time.Time `json:"sentAt"`
+	ChatId		int 			`json:"chatId"`
+}
+
 func NewMessageResponse(message message.Message) MessageResponse {
 	messageResponse := MessageResponse{
 		message.Id,
@@ -32,4 +40,14 @@ func NewMessagesResponse(messages []message.Message) []MessageResponse {
 	}
 
 	return messagesResponse
+}
+
+func NewFullMessageResponse(message message.Message) FullMessageResponse {
+	return FullMessageResponse{
+		Id: message.Id,
+		Content: message.Content,
+		CreatedBy: message.CreatedBy,
+		SentAt: message.CreatedAt,
+		ChatId: message.ChatId,
+	}
 }

@@ -9,6 +9,11 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+type WsEvent struct {
+	Type    string      `json:"type"`
+	Payload interface{} `json:"payload"`
+}
+
 var wsUpgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true
@@ -49,5 +54,26 @@ func WebsocketHandler() http.HandlerFunc {
 
 			log.Println("received:", string(msg))
 		}
+	}
+}
+
+func SendToUser(userId int, data any) {
+	mu.Lock()
+	conn, ok := clients[userId]
+	mu.Unlock()
+
+	if !ok {
+		return
+	}
+
+	err := conn.WriteJSON(data)
+	if err != nil {
+		log.Println("error sending message:", err)
+
+		mu.Lock()
+		delete(clients, userId)
+		mu.Unlock()
+
+		conn.Close()
 	}
 }

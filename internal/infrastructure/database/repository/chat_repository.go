@@ -84,3 +84,15 @@ func (repository ChatRepository) FindChatsByUserId(id int) (*[]chat.ChatListItem
 
 	return &chats, nil
 }
+
+func (repository ChatRepository) FindChatById(id int) (*chat.Chat, error) {
+	var chat chat.Chat
+
+	err := repository.db.Where("id = ?", id).First(&chat).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &chat, nil
+}
