@@ -94,7 +94,7 @@ func (repository UserRepository) FindUserById(id int) (*user.User, error) {
 	return &user, nil
 }
 
-func (repository UserRepository) 	FindUsersNotInChatsWithMeByUserId(id int) (*[]user.User, error) {
+func (repository UserRepository) FindUsersNotInChatsWithMeByUserId(id int) (*[]user.User, error) {
 	var users []user.User
 
 	err := repository.db.Table("users u").

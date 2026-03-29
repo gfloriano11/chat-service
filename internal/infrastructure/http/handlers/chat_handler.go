@@ -7,21 +7,47 @@ import (
 	"chat-service/internal/infrastructure/security/auth"
 	"encoding/json"
 	"net/http"
+	"strconv"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type ChatHandler struct {
-	CreateChatUseCase application.CreateChatUseCase
+	CreateChatUseCase 				application.CreateChatUseCase
+	FindChatsByUserIdUseCase 	application.FindChatsByUserIdUseCase
 }
 
-func NewChatHandler(createChat application.CreateChatUseCase) ChatHandler {
+func NewChatHandler(
+	createChat 				application.CreateChatUseCase,
+	findChatsByUserId application.FindChatsByUserIdUseCase,
+) ChatHandler {
 	return ChatHandler{
 		CreateChatUseCase: createChat,
+		FindChatsByUserIdUseCase: findChatsByUserId,
 	}
 }
 
-func (handler ChatHandler) GetChat(w http.ResponseWriter, r *http.Request) {
+func (handler ChatHandler) GetChatsByUserId(w http.ResponseWriter, r *http.Request) {
+	userId, err := strconv.Atoi(chi.URLParam(r, "userId"))
+
+	if err != nil {
+		http.Error(w, "invalid body", http.StatusInternalServerError)
+	}
+
+	chats, err := handler.FindChatsByUserIdUseCase.Execute(userId)
+
+	if err != nil {
+
+		switch err {
+			default:
+				http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+				return
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Connected!"))
+	json.NewEncoder(w).Encode(response.NewChatListResponse(*chats))
 }
 
 func (handler ChatHandler) CreateChat(w http.ResponseWriter, r *http.Request) {

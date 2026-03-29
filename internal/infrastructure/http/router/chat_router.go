@@ -13,9 +13,10 @@ func NewChatRouter(chatModule module.ChatModule) http.Handler {
 
 	chatHandler := handlers.NewChatHandler(
 		chatModule.CreateChat,
+		chatModule.FindChatsByUserId,
 	)
 
-	r.Get("/", chatHandler.GetChat)
+	r.Get("/{userId}", chatHandler.GetChatsByUserId)
 	r.Post("/", chatHandler.CreateChat)
 
 	return r
