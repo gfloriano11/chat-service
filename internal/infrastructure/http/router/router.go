@@ -15,7 +15,7 @@ func NewRouter(modules *module.Modules, jwtService auth.JwtService) http.Handler
 	router := chi.NewRouter()
 
 	router.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5173"},
+		AllowedOrigins:   []string{"http://localhost:5173", "http://localhost:4173"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		AllowCredentials: true,

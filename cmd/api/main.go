@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"chat-service/internal/infrastructure/database"
 	messageHttp "chat-service/internal/infrastructure/http/router"
@@ -13,10 +14,14 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
+	if os.Getenv("ENV") != "production" {
+		err := godotenv.Load()
+
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
+	
 	db, err := database.Connect()
 	if err != nil {
 		log.Fatal(err)
