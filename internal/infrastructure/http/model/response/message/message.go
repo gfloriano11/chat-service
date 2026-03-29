@@ -6,10 +6,10 @@ import (
 )
 
 type MessageResponse struct {
-	Id        int
-	Content   string
-	CreatedBy int
-	SentAt    time.Time
+	Id        int       `json:"id"`
+	Content   string    `json:"content"`
+	CreatedBy int       `json:"createdBy"`
+	SentAt    time.Time `json:"sentAt"`
 }
 
 func NewMessageResponse(message message.Message) MessageResponse {

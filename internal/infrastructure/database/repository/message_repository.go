@@ -40,7 +40,7 @@ func (repository MessageRepository) Save(message *message.Message) error {
 func (repository MessageRepository) FindMessagesByChatId(id int) ([]message.Message, error) {
 
 	var entities []entity.Message
-	err := repository.db.Find(&entities).Error
+	err := repository.db.Where("chat_id = ?", id).Find(&entities).Error
 
 	if err != nil {
 		return []message.Message{}, nil

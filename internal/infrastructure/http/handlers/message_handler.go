@@ -24,7 +24,7 @@ func NewMessageHandler(sendMessage application.SendMessageUseCase, findAllMessag
 	}
 }
 
-func (handler MessageHandler) GetMessages(w http.ResponseWriter, r *http.Request) {
+func (handler MessageHandler) GetMessagesByChatId(w http.ResponseWriter, r *http.Request) {
 	
 	chatId, err := strconv.Atoi(chi.URLParam(r, "chatId"))
 
