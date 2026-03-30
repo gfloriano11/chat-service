@@ -15,7 +15,7 @@ import (
 
 func main() {
 	godotenv.Load()
-	environment := os.Getenv("ENV")
+	environment := os.Getenv("environment")
 	if environment == "" {
 		environment = "development"
 	}

@@ -5,17 +5,29 @@ import (
 	"chat-service/internal/infrastructure/websocket"
 	"chat-service/internal/module"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
+	"github.com/joho/godotenv"
 )
 
 func NewRouter(modules *module.Modules, jwtService auth.JwtService) http.Handler {
 
 	router := chi.NewRouter()
 
+	godotenv.Load()
+	environment := os.Getenv("environment")
+	var allowedRoutes []string
+
+	if environment == "" {
+		allowedRoutes = append(allowedRoutes, os.Getenv("FRONT_DEV_URL"), os.Getenv("FRONT_PROD_URL"))
+	} else {
+		allowedRoutes = append(allowedRoutes, os.Getenv("FINAL_PROD_URL"))
+	}
+
 	router.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:5173", "http://localhost:4173"},
+		AllowedOrigins:   allowedRoutes,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		AllowCredentials: true,
