@@ -31,5 +31,5 @@ func main() {
 		port = "8080"
 	}
 	log.Println("server running at port ", port);
-	http.ListenAndServe(":8080"+port, router)
+	http.ListenAndServe(":"+port, router)
 }
