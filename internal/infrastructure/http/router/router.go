@@ -4,6 +4,7 @@ import (
 	"chat-service/internal/infrastructure/security/auth"
 	"chat-service/internal/infrastructure/websocket"
 	"chat-service/internal/module"
+	"log"
 	"net/http"
 	"os"
 
@@ -25,6 +26,8 @@ func NewRouter(modules *module.Modules, jwtService auth.JwtService) http.Handler
 	} else {
 		allowedRoutes = append(allowedRoutes, os.Getenv("FINAL_PROD_URL"))
 	}
+
+	log.Println(allowedRoutes)
 
 	router.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   allowedRoutes,

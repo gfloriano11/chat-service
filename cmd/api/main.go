@@ -26,6 +26,8 @@ func main() {
 	}
 	modules := module.CreateModules(db)
 	router := messageHttp.NewRouter(modules, auth.NewJwtService())
-	log.Println("server running at http://localhost:8080");
-	http.ListenAndServe(":8080", router)
+	if environment == "development" {
+		log.Println("server running at http://localhost:8080");
+		http.ListenAndServe(":8080", router)
+	}
 }
