@@ -14,14 +14,12 @@ import (
 )
 
 func main() {
-	if os.Getenv("ENV") != "production" {
-		err := godotenv.Load()
-
-		if err != nil {
-			log.Fatal(err)
-		}
+	godotenv.Load()
+	environment := os.Getenv("ENV")
+	if environment == "" {
+		environment = "development"
 	}
-	
+	log.Printf("Running in %s mode", environment)
 	db, err := database.Connect()
 	if err != nil {
 		log.Fatal(err)
