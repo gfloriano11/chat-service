@@ -93,8 +93,8 @@ func (service JwtService) AuthMiddleware() func(http.Handler) http.Handler {
 }
 
 func (service JwtService) NewAuthCookie(token string) *http.Cookie {
-	env := os.Getenv("APP_ENV")
-	isProd := env == "production"
+	env := os.Getenv("environment")
+	isProd := env == "PRODUCTION"
 
 	sameSite := http.SameSiteLaxMode
 	if isProd {
