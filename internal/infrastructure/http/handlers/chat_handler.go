@@ -65,6 +65,7 @@ func (handler ChatHandler) CreateChat(w http.ResponseWriter, r *http.Request) {
 
 	chat, err := handler.CreateChatUseCase.Execute(newChatRequest.ToNewChatInput(userId))
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(response.NewChatResponse(chat))
 }

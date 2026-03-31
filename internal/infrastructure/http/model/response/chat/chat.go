@@ -7,18 +7,18 @@ import (
 
 type ChatResponse struct {
 	Id           int				`json:"id"`
-	Title        string			`json:"title"`
+	Title        string			`json:"name"`
 	SecondUserId int				`json:"secondUserId"`
 	CreatedBy    int				`json:"createdBy"`
 	CreatedAt    time.Time	`json:"createdAt"`
 }
 
 type ChatListItemResponse struct {
-	Id int `json:"id"`
-	UserID int `json:"userId"`
-	Fullname string `json:"name"`
-	LastMessage *string `json:"lastMessage"`
-	LastMessageAt *time.Time `json:"lastMessageSentAt"`
+	Id int 										`json:"id"`
+	UserID int 								`json:"userId"`
+	Fullname string 					`json:"name"`
+	LastMessage *string 			`json:"lastMessage"`
+	LastMessageAt *time.Time 	`json:"lastMessageSentAt"`
 }
 
 func NewChatResponse(chat chat.Chat) ChatResponse {
